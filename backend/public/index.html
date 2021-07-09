@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <script>
+        async function contactServer() {
+            const response = await fetch('/api');
+            const data = await response.json();
+            console.log(data);
+        }
+    </script>
+    <body>
+        <h1>Hello World</h1>
+        <button onclick="contactServer()"></button>
+    </body>
+</html>

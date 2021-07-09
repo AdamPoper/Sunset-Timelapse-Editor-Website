@@ -1,0 +1,23 @@
+{
+  "name": "sunsettimelapseeditor",
+  "version": "1.0.0",
+  "description": "backend for the site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdamPoper/Sunset-Timelapse-Editor-Website.git"
+  },
+  "author": "Adam Poper",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AdamPoper/Sunset-Timelapse-Editor-Website/issues"
+  },
+  "homepage": "https://github.com/AdamPoper/Sunset-Timelapse-Editor-Website#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.10"
+  }
+}
