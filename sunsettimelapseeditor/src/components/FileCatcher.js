@@ -17,6 +17,21 @@ export default class FileCatcher extends React.Component {
     .catch(err => console.error(err));
   }
 
+  checkIfXMP(filename) {
+    let endChar = filename.length - 4;
+    let fileType = new String();
+    while(endChar < filename.length) {
+      fileType += filename.charAt(endChar);
+      endChar++;
+    }
+    if(fileType != '.xmp') {
+      console.log(fileType);
+      alert('Please only upload .xmp files');
+      return false;
+    }
+    return true;
+  }
+
   componentDidMount() {
     this.init();       
     const fileInput = document.getElementById('file-input');
@@ -24,7 +39,16 @@ export default class FileCatcher extends React.Component {
       this.setState({XMP_files: []});
       const files = [];
       for(let i = 0; i < fileInput.files.length; i++) {
-        files.push(fileInput.files[i]);
+        if(this.checkIfXMP(fileInput.files[i].name)) {
+          let fr = new FileReader();
+          fr.onload = () => {
+            const fileName = fileInput.files[i].name;
+            const text = fr.result;
+            files.push({name: fileName, data: text});
+          }          
+          fr.readAsText(fileInput.files[i]);
+        }
+        else return;
       }
       this.setState({XMP_files: files});
       console.log(this.state.XMP_files);
@@ -35,12 +59,12 @@ export default class FileCatcher extends React.Component {
     const options = {
       method: 'POST',
       headers: {
-        'content-type': 'application/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(this.state.XMP_files)
     }
-    await fetch('/api/file-submit', options).then(response => {
-      console.log(response);
+    await fetch('/api/files-submit', options).then(response => {
+      console.log(response.json());
     }).catch(error => {console.log(error)});
   }
 
@@ -52,7 +76,7 @@ export default class FileCatcher extends React.Component {
           <input type="file" id='file-input' multiple />
           <button onClick={(e) => {
             e.preventDefault();
-            this.sendXMPfiles();
+            this.sendXMPfiles();            
           }}>Submit</button>          
         </form>
       </div>
