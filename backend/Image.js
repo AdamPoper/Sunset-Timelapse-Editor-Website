@@ -15,6 +15,7 @@ class Image {
         const s_isoSubStr = 'RecommendedExposureIndex';
     
         this.writeToFile();
+        this.calcExposureVariables();
     }
 
     writeToFile() {
