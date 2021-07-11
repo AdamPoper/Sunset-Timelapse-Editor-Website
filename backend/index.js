@@ -36,12 +36,5 @@ function calculateExposureOffsets(xmp_files) {
     xmp_files.forEach(xmp_data => {
         images.push(new Image(xmp_data));
     });
-    const file = readline.createInterface({
-        input: fs.createReadStream('public/xmp_files/'+images[0].filename),
-        output: process.stdout,
-        terminal: false
-    });
-    file.on('line', line => {
-        console.log(line);
-    });
+    
 }
