@@ -1,4 +1,5 @@
 import React from "react";
+import b64ToBlob from 'b64-to-blob';
 
 export default class FileCatcher extends React.Component {
 	constructor() {
@@ -12,10 +13,7 @@ export default class FileCatcher extends React.Component {
 	}
 
 	async init() {
-		await fetch("/api")
-			.then((response) => response.json())
-			.then((data) => console.log(data))
-			.catch((err) => console.error(err));
+		
 	}
 
 	checkIfXMP(filename) {
@@ -66,18 +64,8 @@ export default class FileCatcher extends React.Component {
 		await fetch("/api/files-submit", options)
 			.then((response) => response.json())
 			.then((data) => {
-				const xmp_data = data.xmp_data;
-				// //console.log(xmp_data);
-				// const files = [];
-				// xmp_data.forEach(xmp => {
-				//   files.push(new File([xmp.xmp_text], xmp.name, {
-				//     type: ''
-				//   }));
-				// });
-
-				// this.setState({XMP_files: files});
-        this.setState({ XMP_files: xmp_data });
-        this.setState({algorithmDone: true});
+        		this.setState({ XMP_files: data.xmp_data });
+        		this.setState({algorithmDone: true});
 				console.log(this.state.XMP_files);
 			})
 			.catch((error) => {
@@ -85,17 +73,47 @@ export default class FileCatcher extends React.Component {
 			});
 	}
 
-	download(file) {
-		let a = document.createElement("a");
-		a.setAttribute(
-			"href",
-			"data:text/plain;charset=utf-8," + encodeURIComponent(file.xmp_text)
-		);
-		a.setAttribute("download", file.name);
-		a.style.display = "none";
-		document.body.appendChild(a);
-		a.click();
-		document.body.removeChild(a);
+	async download() {
+		// const res = await fetch('/api/download-files');
+		// const data = await res.json();
+		// console.log(data);
+		await fetch('/api/download-files')
+		.then(res => res.json())
+		.then(data => {
+			console.log(data);
+			const zipBlob = b64ToBlob(data.zip64);
+			console.log(zipBlob);
+			const fileURL = URL.createObjectURL(zipBlob);
+			let anchor = document.createElement('a');
+			anchor.href = fileURL;
+			anchor.download = 'XMPfiles.zip';
+			document.body.appendChild(anchor);
+			anchor.click();
+			document.body.removeChild(anchor);
+			URL.revokeObjectURL(fileURL);
+		}).catch(err => {
+			console.error(err);
+		});
+		// const file = await fetch('/api/download-files');
+		// const fileBlob = await file.blob();
+		// const fileUrl = URL.createObjectURL(fileBlob);		
+		// let a = document.createElement("a");
+		// a.href = fileUrl;
+		// a.download = 'XMPfiles.xmp';
+		// document.body.appendChild(a);
+		// a.click();
+		// document.body.removeChild(a);	
+		// URL.revokeObjectURL(fileUrl);
+		// a.setAttribute(
+		// 	"href",
+		// 	"data:text/plain;charset=utf-8," + encodeURIComponent(file.xmp_text)
+		// );
+		// a.setAttribute("download", file.name);
+		// a.style.display = "none";
+		// document.body.appendChild(a);
+		// a.click();
+		// document.body.removeChild(a);
+		
 	}
 
 	render() {
@@ -113,7 +131,11 @@ export default class FileCatcher extends React.Component {
 						Submit
 					</button>
 					{this.state.algorithmDone ? (
-						<button onClick={() => this.download(this.state.XMP_files[123])}>
+						<button onClick={(e) => {
+							e.preventDefault();
+							this.download();
+						}
+						}>
 							Download Results
 						</button>
 					) : (

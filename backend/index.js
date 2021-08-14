@@ -3,8 +3,12 @@ const bodyparser = require('body-parser');
 const readline = require('readline');
 const Image = require('./Image.js');
 const fs = require('fs');
+const JSZip = require('jszip');
+const path = require('path');
 
 const app = express();
+
+let xmpData = [];
 
 const PORT = 3001;
 app.listen(PORT, () => {
@@ -30,9 +34,27 @@ app.get('/api', (request, response) => {
 // submit all the xmp files to the server 
 app.post('/api/files-submit', (request, response) => {
     //console.log(request.body);
-    const files = calculateExposureOffsets(request.body);    
-    response.json({xmp_data: files});
+    xmpData = calculateExposureOffsets(request.body);  
+    //console.log(xmpData);
+    response.json({xmp_data: xmpData});
 });
+
+app.get('/api/download-files', async (request, response) => {
+    const zipBase64 = await generateZipFile();
+    console.log(zipBase64);
+    response.json({
+        zip64: zipBase64
+    });
+});
+
+async function generateZipFile() {
+    const zip = new JSZip();
+    xmpData.forEach(({name, xmp_text}) => {
+        zip.file(name, xmp_text);        
+    });
+    const zipBase64 = await zip.generateAsync({type: 'base64'});    
+    return zipBase64;
+}
 
 // calculates what all the exposure offsets for each image need to be
 function calculateExposureOffsets(xmp_files) {
@@ -44,7 +66,7 @@ function calculateExposureOffsets(xmp_files) {
     let lastSequenceUpdated = 0;
     for(let i = 0; i < images.length - 1; i++) {
         const stops = Image.compareImages(images[i], images[i + 1]);
-        console.log('Stops: ' + stops);
+        //console.log('Stops: ' + stops);
         if (stops != 0) {
             const exposureIncrement = stops / (i - lastSequenceUpdated);
             let exposure = 0;
@@ -79,8 +101,6 @@ function calculateExposureOffsets(xmp_files) {
             );
             exposure += exposureIncrement;
         }
-
     }    
-
     return files;
 }

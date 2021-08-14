@@ -20,22 +20,7 @@ class Image {
 		this.xmp_fileLines = this.xmp_text.split("\n");
 		//console.log('Size: ' + this.xmp_fileLines.length);
         this.parseExposureValues();
-        
-        // fs.writeFile("public/xmp_files/" + this.filename, this.xmp_text, (err) => {
-        //     if (err) throw err;
-        // });
-		// const file = readline.createInterface({
-            //     input: fs.createReadStream('public/xmp_files/'+this.filename),
-		//     output: process.stdout,
-		//     terminal: false
-		// });
-
-		// file.on('line', line => {
-		//     //console.log(line);
-		//     this.xmp_fileLines.push(new String(line));
-		// });
-
-		// console.log('Size: ' + this.xmp_fileLines.length);
+                
 	}
 
     updateExposureMetaData(stops) {
@@ -53,8 +38,8 @@ class Image {
                 updatedLine += sign;
                 updatedLine += String(stops);
                 updatedLine += '"';
-                this.xmp_fileLines[j] = updatedLine;
-                console.log(this.filename + ': ' + this.xmp_fileLines[j]);
+                this.xmp_fileLines[i] = updatedLine;
+                //console.log(this.filename + ': ' + this.xmp_fileLines[j]);
                 break;
             }
         }
@@ -67,7 +52,7 @@ class Image {
 		for (let i = 0; i < this.xmp_fileLines.length || !done; i++) {
             const line = this.xmp_fileLines[i];
 			if (this.xmp_fileLines[i].includes(this.aperatureSubStr)) {
-				this.f_stop = this.parseShutterspeedOrF_stop(line);
+				this.f_stop = this.parseShutterspeedOrFstop(line);
 				continue;
 			}
 			if (this.xmp_fileLines[i].includes(this.isoSubStr)) {
@@ -75,7 +60,7 @@ class Image {
 				continue;
 			}
 			if (this.xmp_fileLines[i].includes(this.shutterspeedSubStr)) {
-				this.shutterspeed = this.parseShutterspeedOrF_stop(line);
+				this.shutterspeed = this.parseShutterspeedOrFstop(line);
 				continue;
             }
             done = this.f_stop != 0 && this.iso != 0 && this.shutterspeed != 0;
@@ -97,7 +82,7 @@ class Image {
     }
 
     // the parseing algorithm for aperature and shutterspeed is the same
-	parseShutterspeedOrF_stop(line) {
+	parseShutterspeedOrFstop(line) {
         let numerator = "";
 		let denominator = "";
 		let i = 0;
@@ -117,10 +102,9 @@ class Image {
 
     finalizeResults() {
         let finalFile = '';
-        this.xmp_fileLines.forEach(line => {
+        this.xmp_fileLines.forEach(line => {           
             finalFile += line + '\n';
         });
-        console.log(finalFile); 
         this.xmp_text = finalFile;
     }
 
