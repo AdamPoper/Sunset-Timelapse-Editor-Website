@@ -5,18 +5,16 @@ const Image = require('./Image.js');
 const fs = require('fs');
 const JSZip = require('jszip');
 const path = require('path');
+const session = require('express-session');
 
 const app = express();
-
-let xmpData = [];
 
 const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
 
-app.use(bodyparser.json({limit: '50mb'}));
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 app.use(express.static('public'));
 
 // cause CORS is so fucking stupid
@@ -24,6 +22,12 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     next();
 });
+
+app.use(session({
+    saveUninitialized: false,
+    resave: false,
+    secret: 'secret'
+}));
 
 // debugging only
 app.get('/api', (request, response) => {
@@ -34,20 +38,28 @@ app.get('/api', (request, response) => {
 // submit all the xmp files to the server 
 app.post('/api/files-submit', (request, response) => {
     //console.log(request.body);
-    xmpData = calculateExposureOffsets(request.body);  
+    if(!request.session.xmpData) {
+        // a list of the filename and the updated xmp text with the exposure calculations
+        request.session.xmpData = [];
+    }
+    try {
+        request.session.xmpData = calculateExposureOffsets(request.body);  
+    } catch(e) {
+        response.json({message: 'Please check your xmp files'});
+    }
     //console.log(xmpData);
-    response.json({xmp_data: xmpData});
+    response.json({xmp_data: request.session.xmpData});
 });
 
 app.get('/api/download-files', async (request, response) => {
-    const zipBase64 = await generateZipFile();
-    console.log(zipBase64);
+    const zipBase64 = await generateZipFile(request.session.xmpData);
+    //console.log(zipBase64);
     response.json({
         zip64: zipBase64
     });
 });
 
-async function generateZipFile() {
+async function generateZipFile(xmpData) {
     const zip = new JSZip();
     xmpData.forEach(({name, xmp_text}) => {
         zip.file(name, xmp_text);        
