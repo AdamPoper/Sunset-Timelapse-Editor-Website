@@ -44,8 +44,8 @@ app.post('/api/files-submit', (request, response) => {
     }
     try {
         request.session.xmpData = calculateExposureOffsets(request.body);  
-    } catch(e) {
-        response.json({message: 'Please check your xmp files'});
+    } catch(e) {                
+        throw new Error(e);
     }
     //console.log(xmpData);
     response.json({xmp_data: request.session.xmpData});

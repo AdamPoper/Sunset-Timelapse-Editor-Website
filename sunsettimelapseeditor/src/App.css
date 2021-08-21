@@ -2,37 +2,74 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 350vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  font-family: 'Poppins', sans-serif;
 }
 
-.App-link {
-  color: #61dafb;
+.App-header h1 {
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  font-size: 60px;
+  margin-top: 20%;
+  margin-bottom: 50px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.intro-img-message {  
+  display: flex;  
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+  margin-bottom: 15%;
+}
+
+.intro-message {
+  letter-spacing: 1px;
+  font-size: 30px;
+  width: 30%;
+}
+
+.intro-img-message img {
+  max-width: 50%;  
+  opacity: 0.8;
+  margin-left: 30px;
+  border-width: 10px;
+  border-radius: 20px;
+  border-color: #435c8d;  
+}
+
+.videos {
+  display: flex;
+  direction: column;
+  justify-content: center;
+}
+
+.App-header h2 {
+  margin: 80px;
+  font-size: 50px;
+}
+
+.videos video {
+  width: 600px;
+  margin: 5%;
+  margin-bottom: 15%;
+}
+
+.adobe-images {
+  display: flex;
+  direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 250px;
+}
+
+.adobe-images img {
+  width: 100px;
+  margin: 20px;
 }

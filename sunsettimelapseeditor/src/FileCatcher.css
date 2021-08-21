@@ -1,0 +1,62 @@
+.file-input {
+    display: flex;
+    justify-content: center;   
+}
+
+.file-input label{
+    display: block;
+    position: relative;
+    width: 200px;
+    height: 50px;
+    border-radius: 25px;
+    background-color: #cfe2ff;
+    color: #084298;
+    border-color: #b6d4fe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform .2s ease-in-out;
+    margin-bottom: 30px;
+}
+
+.file-input p {
+    color: #cfe2ff;
+    font-size: 16px; 
+}
+
+input:hover + label,
+input:focus + label {
+    transform: scale(1.02);
+    outline: 1px solid #000;
+    outline: -webkit-focus-ring-color auto 2px;
+}
+
+.file-name {
+    position: absolute;
+    bottom: -40px;
+    left: 10px;
+    font-size: 0.85rem;
+    color: #555;
+    
+}
+
+.file {
+    opacity: 0;
+    width: 0.1px;
+    height: 0.1px;
+    position: absolute;
+}
+
+.file-submit-download {
+    display: flex;
+    justify-content: center;
+}
+
+.file-submit-download button {
+    margin: 10px;
+}
+
+.file-form {
+    margin-top: 25%;
+}

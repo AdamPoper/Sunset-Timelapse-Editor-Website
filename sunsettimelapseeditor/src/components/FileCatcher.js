@@ -1,5 +1,8 @@
 import React from "react";
 import b64ToBlob from 'b64-to-blob';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Button, Alert} from 'react-bootstrap';
+import '../FileCatcher.css';
 
 export default class FileCatcher extends React.Component {
 	constructor() {
@@ -9,11 +12,6 @@ export default class FileCatcher extends React.Component {
 			algorithmDone: false,
 		};
 		this.sendXMPfiles = this.sendXMPfiles.bind(this);
-		this.init = this.init.bind(this);
-	}
-
-	async init() {
-		
 	}
 
 	checkIfXMP(filename) {
@@ -32,13 +30,14 @@ export default class FileCatcher extends React.Component {
 	}
 
 	componentDidMount() {
-		this.init();
 		const fileInput = document.getElementById("file-input");
+		let totalSizeOfFilesBytes = 0;
 		fileInput.addEventListener("change", (e) => {
 			this.setState({ XMP_files: [] });
 			const files = [];
 			for (let i = 0; i < fileInput.files.length; i++) {
 				if (this.checkIfXMP(fileInput.files[i].name)) {
+					totalSizeOfFilesBytes += fileInput.files[i].size;
 					let fr = new FileReader();
 					fr.onload = () => {
 						const fileName = fileInput.files[i].name;
@@ -48,6 +47,9 @@ export default class FileCatcher extends React.Component {
 					fr.readAsText(fileInput.files[i]);
 				} else return;
 			}
+			const sizeOfFilesKB = (totalSizeOfFilesBytes / 1024).toFixed(2);
+			const fileNameAndSize = `${fileInput.files.length} XMP Files - ${sizeOfFilesKB}KB`;
+			document.querySelector('.file-name').textContent = fileNameAndSize;
 			this.setState({ XMP_files: files });
 			console.log(this.state.XMP_files);
 		});
@@ -70,13 +72,11 @@ export default class FileCatcher extends React.Component {
 			})
 			.catch((error) => {
 				console.log(error);
+				alert('Please Check Your XMP Files');
 			});
 	}
 
-	async download() {
-		// const res = await fetch('/api/download-files');
-		// const data = await res.json();
-		// console.log(data);
+	async download() {		
 		await fetch('/api/download-files')
 		.then(res => res.json())
 		.then(data => {
@@ -93,54 +93,42 @@ export default class FileCatcher extends React.Component {
 			URL.revokeObjectURL(fileURL);
 		}).catch(err => {
 			console.error(err);
-		});
-		// const file = await fetch('/api/download-files');
-		// const fileBlob = await file.blob();
-		// const fileUrl = URL.createObjectURL(fileBlob);		
-		// let a = document.createElement("a");
-		// a.href = fileUrl;
-		// a.download = 'XMPfiles.xmp';
-		// document.body.appendChild(a);
-		// a.click();
-		// document.body.removeChild(a);	
-		// URL.revokeObjectURL(fileUrl);
-		// a.setAttribute(
-		// 	"href",
-		// 	"data:text/plain;charset=utf-8," + encodeURIComponent(file.xmp_text)
-		// );
-		// a.setAttribute("download", file.name);
-		// a.style.display = "none";
-		// document.body.appendChild(a);
-		// a.click();
-		// document.body.removeChild(a);
-		
+		});		
 	}
 
 	render() {
 		return (
 			<div>
-				<form>
-					<label>Upload XMP Files </label>
-					<input type="file" id="file-input" multiple />
-					<button
-						onClick={(e) => {
-							e.preventDefault();
-							this.sendXMPfiles();
-						}}
-					>
-						Submit
-					</button>
-					{this.state.algorithmDone ? (
-						<button onClick={(e) => {
-							e.preventDefault();
-							this.download();
-						}
-						}>
-							Download Results
+				<form className="file-form">
+					<div className="file-input">
+						<input type="file" className="file" id="file-input" multiple />
+						<label htmlFor='file-input'>
+							Select Files
+							<p className="file-name">No Files Selected</p>
+						</label>
+					</div>
+					{this.state.algorithmDone ? <p>Calculations Have finished</p> : <div/>}
+					<div className="file-submit-download">
+						<button
+							onClick={(e) => {
+								e.preventDefault();
+								this.sendXMPfiles();
+							}}
+							className="btn btn-outline-primary btn-lg">
+							Submit
 						</button>
-					) : (
-						<div />
-					)}
+						{this.state.algorithmDone ? (
+							<button onClick={(e) => {
+								e.preventDefault();
+								this.download();
+							}
+							} className="btn btn-outline-primary btn-lg">
+								Download Results
+							</button>
+						) : (
+							<div />
+						)}
+					</div>
 				</form>
 			</div>
 		);
