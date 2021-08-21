@@ -14,19 +14,19 @@ function App() {
     <div className='App-header'>
       <h1>Welcome To The Lightroom Sunset Time Lapse Editor</h1>
       <div className="adobe-images">
-        <img src={lr}/>
-        <img src={ps}/>
+        <img src={lr} alt="Adobe Lightroom"/>
+        <img src={ps} alt="Adobe Photoshop"/>
       </div>
       <div className="intro-img-message">
         <h3 className="intro-message">Easily Get Exposure Offsets For Your Time Lapse Images To Eliminate Light Flickering</h3> 
-        <img src={sunset} />        
+        <img src={sunset} alt="Sunset Time Lapse Editing"/>        
       </div>
       <h2>See The Before And After</h2>
       <div className="videos">
-        <video src={before} muted loop autoPlay/>
-        <video src={after} muted loop autoPlay/>
+        <video src={before} muted loop autoPlay alt="sunset time lapse with light flickering"/>
+        <video src={after} muted loop autoPlay alt="sunset time lapse with out light flickering"/>
       </div>
-      <h3>Select All Of Your Adobe XMP Files For The Images</h3>
+      <h3>Select All Of Your Adobe <a href="https://helpx.adobe.com/lightroom-classic/help/metadata-basics-actions.html" target="_blank">XMP Files</a> For The Images</h3>
       <h3>You Wish To Use In Your Time Lapse And Upload Them</h3>      
       <FileCatcher />
     </div>

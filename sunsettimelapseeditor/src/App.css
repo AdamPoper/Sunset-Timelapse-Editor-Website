@@ -50,6 +50,10 @@
   justify-content: center;
 }
 
+.App-header h3 a {
+  text-decoration: none;
+}
+
 .App-header h2 {
   margin: 80px;
   font-size: 50px;
