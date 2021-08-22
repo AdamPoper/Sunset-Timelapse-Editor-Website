@@ -1,0 +1,43 @@
+.app-info {
+    background-color: #282c34;
+    font-size: calc(10px + 2vmin);
+    letter-spacing: 1px;
+    font-family: 'Poppins', sans-serif;
+    color: white;   
+    display: flex;
+    flex-direction: column;  
+    justify-content: center;        
+}
+
+.app-info p {
+    text-align: center;
+    width: 80%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.app-info h1 {
+    text-align: center;
+    margin: 5%;
+    font-size: 45px;
+}
+
+.lr-instructions {
+    width: 35%;
+    display: block;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 20px;
+}
+
+.profile-pic {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 10%;
+    border-radius: 50%;
+    margin-bottom: 2%;
+}
