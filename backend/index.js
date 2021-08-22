@@ -2,6 +2,7 @@ const express = require('express');
 const Image = require('./Image.js');
 const JSZip = require('jszip');
 const session = require('express-session');
+const path = require('path');
 
 const app = express();
 
@@ -11,7 +12,7 @@ app.listen(PORT, () => {
 });
 
 app.use(express.json({limit: '50mb'}));
-app.use(express.static('public'));
+app.use(express.static(__dirname+'../sunsettimelapseeditor/build'));
 
 // cause CORS is so fucking stupid
 app.use((req, res, next) => {
@@ -30,6 +31,12 @@ app.get('/api', (request, response) => {
     console.log('server contacted');    
     response.json({message: 'hello'});
 });
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'../sunsettimelapseeditor/public/index.html'));
+})
 
 // submit all the xmp files to the server 
 app.post('/api/files-submit', (request, response) => {
