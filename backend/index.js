@@ -1,10 +1,6 @@
 const express = require('express');
-const bodyparser = require('body-parser');
-const readline = require('readline');
 const Image = require('./Image.js');
-const fs = require('fs');
 const JSZip = require('jszip');
-const path = require('path');
 const session = require('express-session');
 
 const app = express();
@@ -37,7 +33,6 @@ app.get('/api', (request, response) => {
 
 // submit all the xmp files to the server 
 app.post('/api/files-submit', (request, response) => {
-    //console.log(request.body);
     if(!request.session.xmpData) {
         // a list of the filename and the updated xmp text with the exposure calculations
         request.session.xmpData = [];
@@ -47,18 +42,19 @@ app.post('/api/files-submit', (request, response) => {
     } catch(e) {                
         throw new Error(e);
     }
-    //console.log(xmpData);
     response.json({xmp_data: request.session.xmpData});
 });
 
+// download the results of the calculations
+// generates a zip file to place all of the files
 app.get('/api/download-files', async (request, response) => {
     const zipBase64 = await generateZipFile(request.session.xmpData);
-    //console.log(zipBase64);
     response.json({
         zip64: zipBase64
     });
 });
 
+// generates the actual zip file and returns it as base64 
 async function generateZipFile(xmpData) {
     const zip = new JSZip();
     xmpData.forEach(({name, xmp_text}) => {
@@ -78,7 +74,6 @@ function calculateExposureOffsets(xmp_files) {
     let lastSequenceUpdated = 0;
     for(let i = 0; i < images.length - 1; i++) {
         const stops = Image.compareImages(images[i], images[i + 1]);
-        //console.log('Stops: ' + stops);
         if (stops != 0) {
             const exposureIncrement = stops / (i - lastSequenceUpdated);
             let exposure = 0;
@@ -98,7 +93,7 @@ function calculateExposureOffsets(xmp_files) {
     }
 
     // if there are images left then they need to be updated too
-    // 0.04 is used as a default
+    // 0.04 is used as default
     if(lastSequenceUpdated <= images.length) {
         const exposureIncrement = 0.04;
         let exposure = 0;

@@ -1,7 +1,6 @@
 import React from "react";
 import b64ToBlob from 'b64-to-blob';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button, Alert} from 'react-bootstrap';
 import '../FileCatcher.css';
 
 export default class FileCatcher extends React.Component {
@@ -14,6 +13,7 @@ export default class FileCatcher extends React.Component {
 		this.sendXMPfiles = this.sendXMPfiles.bind(this);
 	}
 
+	// only works if the extension is .xmp
 	checkIfXMP(filename) {
 		let endChar = filename.length - 4;
 		let fileType = new String();
