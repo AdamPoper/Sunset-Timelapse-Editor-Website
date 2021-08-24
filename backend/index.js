@@ -33,10 +33,10 @@ app.get('/api', (request, response) => {
 });
 
 // The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
+// match one above, send back the index.html file.
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public'));
-})
+});
 
 // submit all the xmp files to the server 
 app.post('/api/files-submit', (request, response) => {
@@ -44,7 +44,7 @@ app.post('/api/files-submit', (request, response) => {
         // a list of the filename and the updated xmp text with the exposure calculations
         request.session.xmpData = [];
     }
-    try {
+    try {        
         request.session.xmpData = calculateExposureOffsets(request.body);  
     } catch(e) {                
         throw new Error(e);
@@ -65,6 +65,7 @@ app.get('/api/download-files', async (request, response) => {
 async function generateZipFile(xmpData) {
     const zip = new JSZip();
     xmpData.forEach(({name, xmp_text}) => {
+        console.log(xmp_text);
         zip.file(name, xmp_text);        
     });
     const zipBase64 = await zip.generateAsync({type: 'base64'});    
@@ -90,7 +91,7 @@ function calculateExposureOffsets(xmp_files) {
                 files.push(
                     {
                         name: images[j].filename,
-                        xmp_text: images[j].xmp_text
+                        xmp_text: images[j].xmpText
                     }
                 );
                 exposure += exposureIncrement;
