@@ -12,7 +12,7 @@ app.listen(PORT, () => {
 });
 
 app.use(express.json({limit: '50mb'}));
-app.use(express.static(__dirname+'../sunsettimelapseeditor/build'));
+app.use(express.static('public'));
 
 // cause CORS is so fucking stupid
 app.use((req, res, next) => {
@@ -35,7 +35,7 @@ app.get('/api', (request, response) => {
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname+'../sunsettimelapseeditor/public/index.html'));
+    res.sendFile(path.join(__dirname, 'public'));
 })
 
 // submit all the xmp files to the server 
