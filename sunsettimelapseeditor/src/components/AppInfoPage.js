@@ -34,7 +34,7 @@ function AppInfoPage() {
                 out how things work. It is my goal to one day become a software engineer which is why I  
                 have created this app to add to my portfolio of programming projects. 
                 Please also view my online portfolio <a href="http://adampoper.io" target="_blank">adampoper.io</a> and
-                you can to reach out to me personally at adampoper@gmail.com.
+                you can reach out to me personally at adampoper@gmail.com.
             </p>           
         </div>
     );
